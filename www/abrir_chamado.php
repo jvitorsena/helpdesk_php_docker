@@ -2,8 +2,31 @@
 require("verificar_sessao.php");
 require('conexao.php');
 
+$acao = isset($_GET['acao']) ? $_GET['acao'] : $acao;
 
-$sql = "select nome_categoria from tbcategoria";
+if ($acao == 'inserir') {
+  $titulo = $_POST['titulo'];
+  $categoria = $_POST['categoria'];
+  $descricao = $_POST['descricao'];
+
+  $sql = "insert into `tbchamados` (`titulo_chamado`, `descricao_chamado`, `codigo_categoria`) VALUES ('{$titulo}', '{$descricao}', '{$categoria}')";
+
+
+  header('Location: abrir_chamado.php');
+
+  $resultado = mysqli_query($con, $sql);
+
+  $resultado->exec;
+
+  // echo $titulo;
+  // echo $categoria;
+  // echo $descricao;
+
+}
+
+// INSERT INTO `tbchamados` (`codigo_chamado`, `titulo_chamado`, `descricao_chamado`, `codigo_categoria`) VALUES (NULL, '', '', '')
+
+$sql = "select * from tbcategoria";
 
 $resultado = mysqli_query($con, $sql);
 
@@ -29,7 +52,7 @@ $linha = mysqli_num_rows($resultado);
 <body>
 
   <nav class="navbar navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="home.php">
       <img src="logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
       App Help Desk
     </a>
@@ -47,41 +70,41 @@ $linha = mysqli_num_rows($resultado);
             <div class="row">
               <div class="col">
 
-                <form>
+                <form method="POST" action="abrir_chamado.php?acao=inserir">
                   <div class="form-group">
                     <label>Título</label>
-                    <input type="text" class="form-control" placeholder="Título">
+                    <input type="text" name="titulo" class="form-control" placeholder="Título" required>
                   </div>
 
                   <div class="form-group">
                     <label>Categoria</label>
-                    <select class="form-control">
+                    <select class="form-control" name="categoria">
                       <?php
                       while ($linha = mysqli_fetch_assoc($resultado)) {
                       ?>
-                        <option><?php echo $linha['nome_categoria'] ?></option>
-                    </select>
-                  <?php
+                        <option value="<?php echo $linha['codigo_categoria'] ?>">
+                          <?php echo $linha['nome_categoria'] ?>
+                        </option>
+
+                      <?php
                       }
-                  ?>
+                      ?>
+                    </select>
                   </div>
 
                   <div class="form-group">
                     <label>Descrição</label>
-                    <textarea class="form-control" rows="3"></textarea>
+                    <textarea class="form-control" rows="3" name="descricao" required></textarea>
                   </div>
 
                   <div class="row mt-5">
-                    <div class="col-6">
-                      <a href="home.php" style="text-decoration: none;"><button class="btn btn-lg btn-warning btn-block" type="submit">Voltar</button></a>
-                    </div>
+
 
                     <div class="col-6">
                       <button class="btn btn-lg btn-info btn-block" type="submit">Abrir</button>
                     </div>
                   </div>
                 </form>
-
               </div>
             </div>
           </div>
