@@ -3,27 +3,34 @@ require("verificar_sessao.php");
 require('conexao.php');
 
 $acao = isset($_GET['pesquisar']) ? $_GET['pesquisar'] : $acao;
+$excluir = isset($_GET['excluir']) ? $_GET['excluir'] : $excluir;
 
 $sql = '';
 
 if ($acao == 'titulo') {
   $pesq = $_POST['tituloTarefa'];
   $sql = "select 
-            t1.titulo_chamado, t2.nome_categoria, t1.descricao_chamado
+            t1.codigo_chamado ,t1.titulo_chamado, t2.nome_categoria, t1.descricao_chamado
           from
             tbchamados as t1 inner join tbcategoria as t2 on t1.codigo_categoria = t2.codigo_categoria where t1.titulo_chamado LIKE '%{$pesq}%'";
 } else if ($acao == 'categoria') {
   $pesq = $_POST['categoriaTarefa'];
   $sql = "select 
-            t1.titulo_chamado, t2.nome_categoria, t1.descricao_chamado
+            t1.codigo_chamado, t1.titulo_chamado, t2.nome_categoria, t1.descricao_chamado
           from
             tbchamados as t1 inner join tbcategoria as t2 on t1.codigo_categoria = t2.codigo_categoria where t2.nome_categoria LIKE '%{$pesq}%' ";
 } else if ($acao = 'todos') {
   $pesq = $_POST['todasTarefas'];
   $sql = "select 
-            t1.titulo_chamado, t2.nome_categoria, t1.descricao_chamado
+            t1.codigo_chamado, t1.titulo_chamado, t2.nome_categoria, t1.descricao_chamado
           from
             tbchamados as t1 inner join tbcategoria as t2 on t1.codigo_categoria = t2.codigo_categoria";
+} 
+
+if ($excluir){
+  $sql = "DELETE FROM tbchamados WHERE `tbchamados`.`codigo_chamado` = {$excluir}";
+  $resultado = mysqli_query($con, $sql);
+  header('Location: consultar_chamado.php?pesquisar=todos');
 }
 
 
@@ -88,13 +95,15 @@ $linha = mysqli_num_rows($resultado);
             </div>
 
             <div class="card-body">
-
               <?php while ($linha = mysqli_fetch_assoc($resultado)) { ?>
                 <div class="card mb-3 bg-light">
                   <div class="card-body">
                     <h5 class="card-title"><?php echo $linha['titulo_chamado'] ?></h5>
                     <h6 class="card-subtitle mb-2 text-muted"><?php echo $linha['nome_categoria'] ?></h6>
                     <p class="card-text"><?php echo $linha['descricao_chamado'] ?></p>
+                    <?php $codigo = $linha['codigo_chamado'] ?>
+                    <?php echo $linha['nome_categoria'] . "  alterar  - <a href=consultar_chamado.php?excluir=$codigo>Excluir</a> <br>"; ?>
+                    <p class="card-text"><?php $linha['codigo_chamado'] ?></p>
                   </div>
                 </div>
             <?php }

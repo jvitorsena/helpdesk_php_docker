@@ -49,6 +49,18 @@
               </div>
             </div>
           </div>
+          <a href="cadastrar_usuario.php">
+            <button class="btn btn-primary" style="margin-top: 10px;">Cadastrar usuario</button>
+          </a>
+          <a href="cadastrar_categoria.php">
+            <button class="btn btn-primary" style="margin-top: 10px;">Cadastrar categoria</button>
+          </a>
+          <a href="listar_categorias.php">
+            <button class="btn btn-primary" style="margin-top: 10px;">Listar categorias</button>
+          </a>
+          <a href="listar_usuarios.php">
+            <button class="btn btn-primary" style="margin-top: 10px;">Listar usuarios</button>
+          </a>
         </div>
     </div>
   </body>
